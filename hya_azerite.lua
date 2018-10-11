@@ -1,4 +1,4 @@
-local msg = '%s(%d Lv)(%d/%d) : +%d 声望';
+local msg = '%s(%d Lv)(%d/%d) : +%d 能量';
 
 local Caches = {};
 
@@ -9,7 +9,7 @@ local format = _G.string.format;
 
 local locale = GetLocale();
 if(locale == 'zhCN') then
-    msg = '%s(%d 级)(%d/%d) : +%d 声望';
+    msg = '%s(%d 级)(%d/%d) : +%d 能量';
 end
 
 local currency = 'currency:1553';
