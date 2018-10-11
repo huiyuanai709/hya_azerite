@@ -1,4 +1,4 @@
-local msg = '%s(%d Lv)(%d/%d) : +%d 能量';
+local msg = '%s(%d Lv)(%d/%d) : +%d Power';
 
 local Caches = {};
 
