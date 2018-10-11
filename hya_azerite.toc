@@ -1,0 +1,8 @@
+## Interface: 80000
+## Title: hya_azerite
+## Title-zhCN: |cFF0099FF[神器]|c0066FFFF神器能量显示|r
+## Notes-zhCN: |cFF34A2F7屏蔽神器能量货币，使神器能量获取更加直观
+## Version: 1.00
+## Author: huiyuanai709
+
+hya_azerite.lua
