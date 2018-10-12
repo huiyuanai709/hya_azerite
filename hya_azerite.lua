@@ -27,13 +27,14 @@ function filter(_, _, msg, ...)
 end
 
 function getOrCreateCache()
-    if(not Caches['link']) then
-        local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
-        local azeriteItem = Item:CreateFromItemLocation(azeriteItemLocation);
-        local azeriteItemLink = azeriteItem:GetItemLink();
-        Caches['link'] = azeriteItemLink;
+    if(Caches['link']) then
+        return Caches['link'];
     end
-    return Caches['link'];
+    local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
+    local azeriteItem = Item:CreateFromItemLocation(azeriteItemLocation);
+    local azeriteItemLink = azeriteItem:GetItemLink();
+    Caches['link'] = azeriteItemLink;
+    return azeriteItemLink;
 end
 
 function createMsg(_, _, azeriteItemLocation, old, new)
