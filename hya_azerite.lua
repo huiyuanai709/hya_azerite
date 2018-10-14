@@ -14,34 +14,23 @@ end
 
 local currency = 'currency:1553';
 
+local neckItem = '|Hitem:158075'
+
 function filter(_, _, msg, ...)
     if(msg:find(currency)) then
         return true;
     end
-    local azeriteItemLink = getOrCreateCache();
-    if(msg:find(azeriteItemLink or '', nil, true)) then
+    if(msg:find(neckItem)) then
         return true;
     end
-
     return;
-end
-
-function getOrCreateCache()
-    if(Caches['link']) then
-        return Caches['link'];
-    end
-    local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
-    local azeriteItem = Item:CreateFromItemLocation(azeriteItemLocation);
-    local azeriteItemLink = azeriteItem:GetItemLink();
-    Caches['link'] = azeriteItemLink;
-    return azeriteItemLink;
 end
 
 function createMsg(_, _, azeriteItemLocation, old, new)
     local azeriteItem = Item:CreateFromItemLocation(azeriteItemLocation);
     local name = azeriteItem:GetItemName();
     local level = azeriteItem:GetCurrentItemLevel();
-    local azeriteItemLink = getOrCreateCache();
+    local azeriteItemLink = azeriteItem:GetItemLink();
     local xp, totalLevelXp = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
     local currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation);
     azeriteItemLink = azeriteItemLink:gsub('|h%[(.-)]|h', '|h['..level..':'..name..']|h');
@@ -60,3 +49,5 @@ frame:RegisterEvent('AZERITE_ITEM_EXPERIENCE_CHANGED');
 frame:SetScript('OnEvent', createMsg);
 
 ChatFrame_AddMessageEventFilter('CHAT_MSG_SYSTEM', filter);
+
+
