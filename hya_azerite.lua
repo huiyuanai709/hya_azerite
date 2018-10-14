@@ -1,16 +1,14 @@
 local msg = '%s(%d Lv)(%d/%d) : +%d Power';
 
-local Caches = {};
+local locale = GetLocale();
+if(locale == 'zhCN') then
+    msg = '%s(%d 级)(%d/%d) : +%d 能量';
+end
 
 local C_AzeriteItem = C_AzeriteItem;
 local C_Item = C_Item;
 local find = _G.string.find;
 local format = _G.string.format;
-
-local locale = GetLocale();
-if(locale == 'zhCN') then
-    msg = '%s(%d 级)(%d/%d) : +%d 能量';
-end
 
 local currency = 'currency:1553';
 
@@ -49,5 +47,3 @@ frame:RegisterEvent('AZERITE_ITEM_EXPERIENCE_CHANGED');
 frame:SetScript('OnEvent', createMsg);
 
 ChatFrame_AddMessageEventFilter('CHAT_MSG_SYSTEM', filter);
-
-
