@@ -1,5 +1,7 @@
 local msg = '%s(%d Lv)(%d/%d) : +%d Power';
 
+local Caches = {};
+
 local locale = GetLocale();
 if(locale == 'zhCN') then
     msg = '%s(%d 级)(%d/%d) : +%d 能量';
@@ -24,16 +26,34 @@ function filter(_, _, msg, ...)
     return;
 end
 
-function createMsg(_, _, azeriteItemLocation, old, new)
+function chooseEvent(_, self, ...)
+    if(self == 'AZERITE_ITEM_EXPERIENCE_CHANGED') then
+        return createMsg(_, self, ...);
+    end
+    return buildCaches();
+end
+
+function createMsg(_, self, azeriteItemLocation, old, new)
     local azeriteItem = Item:CreateFromItemLocation(azeriteItemLocation);
     local name = azeriteItem:GetItemName();
     local level = azeriteItem:GetCurrentItemLevel();
     local azeriteItemLink = azeriteItem:GetItemLink();
     local xp, totalLevelXp = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
     local currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation);
+    local gained = new - old;
+    if(gained < 0) then
+        gained = new + Caches['totalLevelXp'] - old;
+        Caches['totalLevelXp'] = currentLevel;
+    end
     azeriteItemLink = azeriteItemLink:gsub('|h%[(.-)]|h', '|h['..level..':'..name..']|h');
-    local msg = string.format(msg, azeriteItemLink, currentLevel, xp, totalLevelXp, new - old);
+    local msg = string.format(msg, azeriteItemLink, currentLevel, xp, totalLevelXp, gained);
     addMsg(msg);
+end
+
+function buildCaches()
+    local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
+    local _, totalLevelXp = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
+    Caches['totalLevelXp'] = totalLevelXp;
 end
 
 function addMsg(msg)
@@ -44,6 +64,7 @@ end
 
 local frame = CreateFrame('Frame');
 frame:RegisterEvent('AZERITE_ITEM_EXPERIENCE_CHANGED');
-frame:SetScript('OnEvent', createMsg);
+frame:RegisterEvent('PLAYER_ENTERING_WORLD');
+frame:SetScript('OnEvent', chooseEvent);
 
 ChatFrame_AddMessageEventFilter('CHAT_MSG_SYSTEM', filter);
