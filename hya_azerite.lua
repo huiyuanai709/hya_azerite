@@ -42,8 +42,8 @@ function createMsg(_, self, azeriteItemLocation, old, new)
     local currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation);
     local gained = new - old;
     if(gained < 0) then
-        gained = new + Caches['totalLevelXp'] - old;
-        Caches['totalLevelXp'] = currentLevel;
+        gained = new + Caches[0] - old;
+        Caches[0] = currentLevel;
     end
     azeriteItemLink = azeriteItemLink:gsub('|h%[(.-)]|h', '|h['..level..':'..name..']|h');
     local msg = string.format(msg, azeriteItemLink, currentLevel, xp, totalLevelXp, gained);
@@ -51,9 +51,15 @@ function createMsg(_, self, azeriteItemLocation, old, new)
 end
 
 function buildCaches()
+    if(Caches[0]) then
+        return;
+    end
     local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
+    if(not azeriteItemLocation) then
+        return;
+    end
     local _, totalLevelXp = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
-    Caches['totalLevelXp'] = totalLevelXp;
+    Caches[0] = totalLevelXp;
 end
 
 function addMsg(msg)
