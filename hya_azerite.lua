@@ -16,6 +16,11 @@ local currency = 'currency:1553';
 
 local neckItem = '|Hitem:158075'
 
+local frame = CreateFrame('Frame');
+frame:RegisterEvent('AZERITE_ITEM_EXPERIENCE_CHANGED');
+frame:RegisterEvent('PLAYER_ENTERING_WORLD');
+frame:SetScript('OnEvent', chooseEvent);
+
 function filter(_, _, msg, ...)
     if(msg:find(currency)) then
         return true;
@@ -51,15 +56,13 @@ function createMsg(_, self, azeriteItemLocation, old, new)
 end
 
 function buildCaches()
-    if(Caches[0]) then
-        return;
-    end
     local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
     if(not azeriteItemLocation) then
         return;
     end
     local _, totalLevelXp = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
     Caches[0] = totalLevelXp;
+    frame:UnregisterEvent('PLAYER_ENTERING_WORLD');
 end
 
 function addMsg(msg)
@@ -68,9 +71,6 @@ function addMsg(msg)
     chatfrm:AddMessage(msg, info.r, info.g, info.b, info.id);
 end
 
-local frame = CreateFrame('Frame');
-frame:RegisterEvent('AZERITE_ITEM_EXPERIENCE_CHANGED');
-frame:RegisterEvent('PLAYER_ENTERING_WORLD');
-frame:SetScript('OnEvent', chooseEvent);
+
 
 ChatFrame_AddMessageEventFilter('CHAT_MSG_SYSTEM', filter);
