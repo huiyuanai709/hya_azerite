@@ -56,13 +56,15 @@ function createMsg(_, self, azeriteItemLocation, old, new)
 end
 
 function buildCaches()
+    if(Caches[0]) then
+        return;
+    end
     local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
     if(not azeriteItemLocation) then
         return;
     end
     local _, totalLevelXp = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
     Caches[0] = totalLevelXp;
-    frame:UnregisterEvent('PLAYER_ENTERING_WORLD');
 end
 
 function addMsg(msg)
@@ -70,7 +72,5 @@ function addMsg(msg)
     local chatfrm = getglobal("ChatFrame"..1);
     chatfrm:AddMessage(msg, info.r, info.g, info.b, info.id);
 end
-
-
 
 ChatFrame_AddMessageEventFilter('CHAT_MSG_SYSTEM', filter);
