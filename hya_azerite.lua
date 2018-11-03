@@ -51,12 +51,13 @@ function createMsg(_, self, azeriteItemLocation, old, new)
 end
 
 function buildCaches()
-    if(Caches[0]) then
+    if(Caches[0] ~= nil) then
         return;
     end
     local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
     local _, totalLevelXp = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
     Caches[0] = totalLevelXp;
+    print(Caches[0]);
 end
 
 function addMsg(msg)
