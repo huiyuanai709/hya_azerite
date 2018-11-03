@@ -16,11 +16,6 @@ local currency = 'currency:1553';
 
 local neckItem = '|Hitem:158075'
 
-local frame = CreateFrame('Frame');
-frame:RegisterEvent('AZERITE_ITEM_EXPERIENCE_CHANGED');
-frame:RegisterEvent('PLAYER_ENTERING_WORLD');
-frame:SetScript('OnEvent', chooseEvent);
-
 function filter(_, _, msg, ...)
     if(msg:find(currency)) then
         return true;
@@ -31,8 +26,8 @@ function filter(_, _, msg, ...)
     return;
 end
 
-function chooseEvent(_, self, ...)
-    if(self == 'AZERITE_ITEM_EXPERIENCE_CHANGED') then
+function chooseEvent(_, event, ...)
+    if(event == 'AZERITE_ITEM_EXPERIENCE_CHANGED') then
         return createMsg(_, self, ...);
     end
     return buildCaches();
@@ -47,8 +42,8 @@ function createMsg(_, self, azeriteItemLocation, old, new)
     local currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation);
     local gained = new - old;
     if(gained < 0) then
-        gained = new + Caches['totalLevelXp'] - old;
-        Caches['totalLevelXp'] = currentLevel;
+        gained = new + Caches[0] - old;
+        Caches[0] = currentLevel;
     end
     azeriteItemLink = azeriteItemLink:gsub('|h%[(.-)]|h', '|h['..level..':'..name..']|h');
     local msg = string.format(msg, azeriteItemLink, currentLevel, xp, totalLevelXp, gained);
@@ -56,9 +51,12 @@ function createMsg(_, self, azeriteItemLocation, old, new)
 end
 
 function buildCaches()
+    if(Caches[0]) then
+        return;
+    end
     local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
     local _, totalLevelXp = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
-    Caches['totalLevelXp'] = totalLevelXp;
+    Caches[0] = totalLevelXp;
 end
 
 function addMsg(msg)
@@ -67,4 +65,8 @@ function addMsg(msg)
     chatfrm:AddMessage(msg, info.r, info.g, info.b, info.id);
 end
 
+local frame = CreateFrame('Frame', 'hya_azerite');
+frame:RegisterEvent('PLAYER_ENTERING_WORLD');
+frame:RegisterEvent('AZERITE_ITEM_EXPERIENCE_CHANGED');
+frame:SetScript('OnEvent', chooseEvent);
 ChatFrame_AddMessageEventFilter('CHAT_MSG_SYSTEM', filter);
