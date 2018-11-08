@@ -57,7 +57,6 @@ function buildCaches()
     local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
     local _, totalLevelXp = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
     Caches[0] = totalLevelXp;
-    print(Caches[0]);
 end
 
 function addMsg(msg)
