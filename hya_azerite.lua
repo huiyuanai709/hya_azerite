@@ -43,7 +43,7 @@ function createMsg(_, self, azeriteItemLocation, old, new)
     local gained = new - old;
     if(gained < 0) then
         gained = new + Caches[0] - old;
-        Caches[0] = currentLevel;
+        Caches[0] = totalLevelXp;
     end
     azeriteItemLink = azeriteItemLink:gsub('|h%[(.-)]|h', '|h['..level..':'..name..']|h');
     local msg = string.format(msg, azeriteItemLink, currentLevel, xp, totalLevelXp, gained);
