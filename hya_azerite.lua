@@ -55,6 +55,7 @@ function buildCaches()
         return;
     end
     local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem();
+    if not azeriteItemLocation then return end
     local _, totalLevelXp = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation);
     Caches[0] = totalLevelXp;
 end
